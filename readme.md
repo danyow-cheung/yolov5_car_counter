@@ -14,3 +14,8 @@
 
 更新，根据iD的索引的话，随着视频帧的移动，ID出现改变
 
+## 2023.4.16 learning 
+> 1. https://github.com/charnkanit/Yolov5-Vehicle-Counting/blob/main/track.py
+> 2. https://techvidvan.com/tutorials/opencv-vehicle-detection-classification-counting/
+> 3. https://jorgestutorials.com/pycvtraffic.html
+
