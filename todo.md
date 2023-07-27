@@ -58,3 +58,23 @@ https://github.com/danyow-cheung/yolov5_car_counter
 
 否则的话，写篇blog来介绍整个工作流程。
 
+
+
+
+
+### 2023.7.27
+
+1. 還是選擇yolo+deepsort的方法，先把這一步做了。（7.29完成）
+
+   >  https://github.com/computervisioneng/object-tracking-yolov8-deep-sort 直接手把手教你怎麼寫了。實現的方法很多，看最後結果
+
+2. 找測試視頻，驗證這套方法行不行。總結不行的原因（7.30）
+
+3. 
+
+   
+
+
+
+
+
