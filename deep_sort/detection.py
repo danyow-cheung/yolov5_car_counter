@@ -14,6 +14,12 @@ class Detection(object):
         Detector confidence score.
     feature : array_like
         A feature vector that describes the object contained in this image.
+    
+    
+    # 对应yolo返回的话
+    tlwh           -left,top,right,bottom
+    confidence     - 置信度
+    feature        - 类别英文的？
 
     Attributes
     ----------

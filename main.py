@@ -23,24 +23,26 @@ def run():
         res =  model.detect(frame)
         length = len(res[0]) # 多目标，所以依次获取
         for i in range(length) :
-            
-            detections.append([res[0][i],res[2][i]]) # (像素中心坐标，conf)
-            # detections.append(res[0][i]) # (像素中心坐标，conf)
+            print(res[0][i])
+            print(res)
 
+            # detections.append([res[0][i],res[1][i],res[2][i]]) # (像素中心坐标，conf)
+            detections.append(Detection(tlwh=res[0][i],confidence=res[1][i],feature=res[2][i]),)
         
         print(detections)
-
+        
         '''更新
         这一步应该是，使用deep_sort来跟踪了？
         > 不过deep_sort还是没有玩明白现在  
         tracker.predict()
         tracker.update(detections)
         '''
+        tracker.predict()
+        tracker.update(detections)
 
-        cv2.imshow('frame',frame)
-
-        if cv2.waitKey(10)==27:
-            break
+        # cv2.imshow('frame',frame)
+        # if cv2.waitKey(10)==27:
+        #     break
 
     cap.release()
     cv2.destroyAllWindows()

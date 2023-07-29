@@ -10,30 +10,27 @@ from .nn_matching import NearestNeighborDistanceMetric
 class Tracker:
     """
     This is the multi-target tracker.
-
-    Parameters
-    ----------
-    metric : nn_matching.NearestNeighborDistanceMetric
-        A distance metric for measurement-to-track association.
-    max_age : int
-        Maximum number of missed misses before a track is deleted.
-    n_init : int
-        Number of consecutive detections before the track is confirmed. The
-        track state is set to `Deleted` if a miss occurs within the first
-        `n_init` frames.
-
     Attributes
     ----------
     metric : nn_matching.NearestNeighborDistanceMetric
         The distance metric used for measurement to track association.
+        用于测量跟踪关联的距离度量。
+
     max_age : int
         Maximum number of missed misses before a track is deleted.
+        删除轨迹之前错过的最大错过次数。
+
     n_init : int
         Number of frames that a track remains in initialization phase.
+        轨道在初始化阶段保留的帧数。
+
     kf : kalman_filter.KalmanFilter
         A Kalman filter to filter target trajectories in image space.
+        卡尔曼滤波器用于过滤图像空间中的目标轨迹。
+
     tracks : List[Track]
         The list of active tracks at the current time step.
+        当前时间步的活动轨迹列表。
 
     """
 
@@ -66,6 +63,9 @@ class Tracker:
             A list of detections at the current time step.
 
         """
+        print('查看 detections的属性')
+        print(type(detections))
+
         # Run matching cascade.
         matches, unmatched_tracks, unmatched_detections = \
             self._match(detections)
@@ -107,8 +107,10 @@ class Tracker:
         # Split track set into confirmed and unconfirmed tracks.
         confirmed_tracks = [
             i for i, t in enumerate(self.tracks) if t.is_confirmed()]
-        unconfirmed_tracks = [
+        unconfirmed_tracks = [    
             i for i, t in enumerate(self.tracks) if not t.is_confirmed()]
+    
+        # print('传进去之前的detection',detections) #还是deep_sort.Detection的属性
 
         # Associate confirmed tracks using appearance features.
         matches_a, unmatched_tracks_a, unmatched_detections = \

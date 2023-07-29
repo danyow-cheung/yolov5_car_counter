@@ -31,7 +31,7 @@ class Yolo_detect():
         self.BLUE   = (255,178,50)
         self.YELLOW = (0,255,255)
         '''加载类别名'''
-        classesFile = "/Users/danyow/Desktop/yolov5_car_counter/labels.txt"
+        classesFile = "yolo/labels.txt"
 
         self.classes = None
         with open(classesFile, 'rt') as f:
@@ -42,7 +42,7 @@ class Yolo_detect():
         https://forum.opencv.org/t/error-when-reading-yolo5-as-onnx-using-cv2/11507/3
         `--opset 12`添加倒出参数
         '''
-        modelWeights = "/Users/danyow/Desktop/yolov5_car_counter/yolov5s.onnx"
+        modelWeights = "yolo/yolov5s.onnx"
 
         #计数器
         self.count = 0 
@@ -128,9 +128,11 @@ class Yolo_detect():
         '''非极大值抑制来获取一个标准框'''
         indices = cv2.dnn.NMSBoxes(boxes, confidences, self.CONFIDENCE_THRESHOLD, self.NMS_THRESHOLD)
         # 得到想要的
+        # girl i want it i got it 
         res_box = []
         res_label = []
         res_conf = []
+        
         for i in range(len(indices)): # 矩阵中通过idx可以拿到id
             # print(f'No = {i},NMS Num = {indices[i]}')
 
@@ -142,22 +144,16 @@ class Yolo_detect():
             height = box[3]             
             # 描绘标准框
             cv2.rectangle(input_image, (left, top), (left + width, top + height),self.BLUE, 3*self.THICKNESS)
-            # 像素中心点
-            cx = left+(width)//2 
-            cy = top +(height)//2
-            # cv2.circle(input_image, (cx,cy),  5,self.BLUE, 10)
-            res_box.append((cx,cy))
-
+            
+            res_box.append([left,top,width,height])
             # print(class_ids[i])
-            res_label.append(self.classes[class_ids[i]])
+            # res_label.append(self.classes[class_ids[i]])
+            res_label.append(class_ids[i])
+
             res_conf.append(confidences[i])
 
-            # 检测到的类别                      
-            # label = "{}:{:.2f}".format(self.classes[class_ids[i]], confidences[i])             
-            # 绘制类别             
-            # self.draw_label(input_image, label, left, top)
-        # return res_box,res_label,res_conf,input_image
-        return res_box,res_label,res_conf
+        return res_box,res_conf,res_label
+
 
     
     '''输入图片路径进行检测'''
@@ -179,58 +175,10 @@ class Yolo_detect():
         plt.imshow(img)
         plt.show()
 
-    def CarCounter(self):
-        cap = cv2.VideoCapture('carInHighway.mov')
-
-
-        frame_count=0
-        while cap.isOpened():
-            
-            ret,frame = cap.read()
-
-             
-            
-            if ret:
-                ih,iw,_ = frame.shape
-
-                print(f'当前第{frame_count}帧')
-                # detections = self.pre_process(frame,self.net)
-                # # print(len(detections))
-                # img,(cx,cy),label = self.post_process(frame.copy(),detections)
-                # # print(fps) 5.9 大概是1秒6帧左右
-                
-                cv2.line(frame, (0, self.middle_line_position), (iw, self.middle_line_position), (255, 0, 255), self.THICKNESS)
-                cv2.line(frame, (0, self.up_line_position), (iw, self.up_line_position), (0, 0, 255), self.THICKNESS)
-                cv2.line(frame, (0, self.down_line_position), (iw, self.down_line_position), (0, 0, 255), self.THICKNESS)
-
-                cv2.putText(frame,'count='+str(self.count),(100,100),self.FONT_FACE,3,self.BLUE,3)
-                frame_count+=1 
-                cv2.imshow('yolo-car-count',frame)
-                if cv2.waitKey(10)==27:
-                    # break
-                    exit(0)
-                
-                if frame_count %12==0: # 按照每2s进行检测的话，会出现漏检，多检的情况。
-
-                    detections = self.pre_process(frame,self.net)
-                    img = self.post_process(frame.copy(),detections)
-                
- 
-            else:
-                print('无法打开视频')
-                cap.release()
-                cv2.destroyAllWindows()
-        cap.release()
-        cv2.destroyAllWindows()
-
     def detect(self,frame):
-        '''输入图片帧进行检测，返回坐标,label,conf'''
+        '''输入图片帧进行检测，返回self.post_process里面的内容'''
         detections =self.pre_process(frame, self.net)
         res= self.post_process(frame, detections)
-        # print(res[0:3])
-        # plt.figure(figsize=(15,5))
-        # plt.imshow(res[-1])
-        # plt.show()
 
         return res
 
@@ -240,15 +188,17 @@ class Yolo_detect():
 if __name__ == '__main__':
 
     path = [
-        './sequence/data_frame0.jpg'
+        './sequence/data_frame0.jpg',
+        'yolo/test_car.jpeg',
     ]
 
     detector = Yolo_detect()
-    image = cv2.imread(path[0])
-    # bbox,labels,confs = detector.detect(image)
-    res = detector.detect(image)
+    # image = cv2.imread(path[1])
+    # res = detector.detect(image)  
+
     # print(res)
-    # # print(res.shape) 
+   
+    # # # print(res.shape) 
     # length = len(res[0])
     # # for box in bbox:
     # for i in range(length) :
