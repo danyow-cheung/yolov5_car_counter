@@ -33,7 +33,9 @@ class Track:
     n_init : int
         Number of consecutive detections before the track is confirmed. The
         track state is set to `Deleted` if a miss occurs within the first
+        確認跟蹤之前的連續檢測次數，如果在第一個跟蹤內未發生命中，則跟蹤狀態設置為'已刪除'
         `n_init` frames.
+
     max_age : int
         The maximum number of consecutive misses before the track state is
         set to `Deleted`.

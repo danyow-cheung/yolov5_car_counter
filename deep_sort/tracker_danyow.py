@@ -35,6 +35,11 @@ class Tracker:
     """
 
     def __init__(self, max_iou_distance=0.7, max_age=30, n_init=3):
+        '''
+        發現問題
+        n_init 是多少決定著後續deep_sort會不會報錯，which說 n_init要和圖片上的識別數量對齊。
+
+        '''
         metric =  NearestNeighborDistanceMetric("cosine", matching_threshold=0.7)
         self.metric = metric
 
@@ -63,9 +68,6 @@ class Tracker:
             A list of detections at the current time step.
 
         """
-        print('查看 detections的属性')
-        print(type(detections))
-
         # Run matching cascade.
         matches, unmatched_tracks, unmatched_detections = \
             self._match(detections)
@@ -109,14 +111,33 @@ class Tracker:
             i for i, t in enumerate(self.tracks) if t.is_confirmed()]
         unconfirmed_tracks = [    
             i for i, t in enumerate(self.tracks) if not t.is_confirmed()]
-    
-        # print('传进去之前的detection',detections) #还是deep_sort.Detection的属性
+        
+
+
+
+
+
+
+        '''
+        n_init的數量要和圖片中識別到的object數量匹配才不會出錯否則報index
+        '''
 
         # Associate confirmed tracks using appearance features.
         matches_a, unmatched_tracks_a, unmatched_detections = \
-            linear_assignment.matching_cascade(
+            linear_assignment.matching_cascade( 
                 gated_metric, self.metric.matching_threshold, self.max_age,
                 self.tracks, detections, confirmed_tracks)
+        '''
+        20230730 --- bug here
+        '''
+
+
+
+
+
+
+
+
 
         # Associate remaining tracks together with unconfirmed tracks using IOU.
         iou_track_candidates = unconfirmed_tracks + [
@@ -125,24 +146,22 @@ class Tracker:
         unmatched_tracks_a = [
             k for k in unmatched_tracks_a if
             self.tracks[k].time_since_update != 1]
+        
         matches_b, unmatched_tracks_b, unmatched_detections = \
             linear_assignment.min_cost_matching(
                 iou_matching.iou_cost, self.max_iou_distance, self.tracks,
                 detections, iou_track_candidates, unmatched_detections)
-
+        
         matches = matches_a + matches_b
         unmatched_tracks = list(set(unmatched_tracks_a + unmatched_tracks_b))
         return matches, unmatched_tracks, unmatched_detections
 
     def _initiate_track(self, detection):
         mean, covariance = self.kf.initiate(detection.to_xyah())
-
-        # 有更改！！！！！！！
-        # mean, covariance = self.kf.initiate(detection)
-        
+        '''終於找到self.n_init的問題所在'''
         self.tracks.append(Track(
             mean, covariance, self._next_id, self.n_init, self.max_age,
-            detection.feature))
+            detection.feature))        
         self._next_id += 1
 
 

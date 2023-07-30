@@ -23,14 +23,9 @@ def run():
         res =  model.detect(frame)
         length = len(res[0]) # 多目标，所以依次获取
         for i in range(length) :
-            print(res[0][i])
-            print(res)
 
-            # detections.append([res[0][i],res[1][i],res[2][i]]) # (像素中心坐标，conf)
             detections.append(Detection(tlwh=res[0][i],confidence=res[1][i],feature=res[2][i]),)
-        
-        print(detections)
-        
+        print('total length ',len(detections))
         '''更新
         这一步应该是，使用deep_sort来跟踪了？
         > 不过deep_sort还是没有玩明白现在  

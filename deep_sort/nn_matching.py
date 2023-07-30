@@ -48,9 +48,14 @@ def _cosine_distance(a, b, data_is_normalized=False):
         contains the squared distance between `a[i]` and `b[j]`.
 
     """
+    print(f'a={a},b={b},type(a)={type(a)},type(b)={type(b)}')
     if not data_is_normalized:
-        a = np.asarray(a) / np.linalg.norm(a, axis=1, keepdims=True)
-        b = np.asarray(b) / np.linalg.norm(b, axis=1, keepdims=True)
+        '''這裡到底要不要axis=1'''
+        
+        a = np.asarray(a) / np.linalg.norm(a, keepdims=True)
+        b = np.asarray(b) / np.linalg.norm(b,keepdims=True)
+
+        
     return 1. - np.dot(a, b.T)
 
 
@@ -171,7 +176,23 @@ class NearestNeighborDistanceMetric(object):
             `targets[i]` and `features[j]`.
 
         """
+        print('為什麼少了你告訴我')
+        print(targets,features) # 這裡長度是一致的
+        print(self.samples)
+
+        print('feature',features)
+
         cost_matrix = np.zeros((len(targets), len(features)))
+        '''
+        又發現問題，targets和features長度不等的時候怎麼辦？
+        換句話說，會報錯。 -----20230730
+        '''
         for i, target in enumerate(targets):
-            cost_matrix[i, :] = self._metric(self.samples[target], features)
+            print('nn_matching這裡用target和feature來對比，檢查長度是否一致')
+            print('target',target)
+            '''感覺還是在這個附近來找'''
+
+            print(len(self.samples[target]),features)
+            cost_matrix[i, :] = self._metric(self.samples[target], features[i])
+
         return cost_matrix

@@ -152,7 +152,7 @@ class Yolo_detect():
 
             res_conf.append(confidences[i])
 
-        return res_box,res_conf,res_label
+        return res_box,res_conf,res_label,input_image
 
 
     
@@ -193,6 +193,7 @@ if __name__ == '__main__':
     ]
 
     detector = Yolo_detect()
+
     # image = cv2.imread(path[1])
     # res = detector.detect(image)  
 
@@ -205,6 +206,16 @@ if __name__ == '__main__':
     #     # 像素中心坐标
     #     print(res[0][i],res[2][i])
 
+    # 20230730 現在要測試在第一幀畫面中是不是12個object被檢測到
+    # 確實是12個object，所以對應到n_init應該是單個的predict和update? maybe
+    
+    # cap = cv2.VideoCapture('carInHighway.mp4')
+    # success,frame = cap.read()
+    # while success:
+    #     ret,frame = cap.read()
+    #     res = detector.detect(frame)
+    #     plt.imshow(res[-1])
+    #     plt.show()
 
 
 
