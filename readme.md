@@ -68,6 +68,10 @@ https://github.com/danyow-cheung/yolov5_car_counter
 
    >  https://github.com/computervisioneng/object-tracking-yolov8-deep-sort 直接手把手教你怎麼寫了。實現的方法很多，看最後結果
 
+
+   **20230731 更新：發現新的問題**
+   目前已經實現目標跟蹤，剩下來的是記錄id計數，這一步又要怎麼實現？
+
 2. 找測試視頻，驗證這套方法行不行。總結不行的原因（7.30）
 
 3. 
