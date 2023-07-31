@@ -97,11 +97,18 @@ class Tracker:
     def _match(self, detections):
 
         def gated_metric(tracks, dets, track_indices, detection_indices):
+            # --------
+            print('detection_indices',detection_indices)
+            print('track_indices',track_indices)
+            # 這裡做一個截斷，只要detection的長度 
+            stop = len(detection_indices)
+            # --------
             features = np.array([dets[i].feature for i in detection_indices])
-            targets = np.array([tracks[i].track_id for i in track_indices])
+            targets = np.array([tracks[i].track_id for i in track_indices[0:stop]]) # [0:stop]截斷·
+            print('features.shape = ,targets.shape = ',features.shape,targets.shape)
             cost_matrix = self.metric.distance(features, targets)
             cost_matrix = linear_assignment.gate_cost_matrix(
-                self.kf, cost_matrix, tracks, dets, track_indices,
+                self.kf, cost_matrix, tracks, dets, track_indices[0:stop],# [0:stop]截斷·
                 detection_indices)
 
             return cost_matrix
@@ -113,30 +120,11 @@ class Tracker:
             i for i, t in enumerate(self.tracks) if not t.is_confirmed()]
         
 
-
-
-
-
-
-        '''
-        n_init的數量要和圖片中識別到的object數量匹配才不會出錯否則報index
-        '''
-
         # Associate confirmed tracks using appearance features.
         matches_a, unmatched_tracks_a, unmatched_detections = \
             linear_assignment.matching_cascade( 
                 gated_metric, self.metric.matching_threshold, self.max_age,
                 self.tracks, detections, confirmed_tracks)
-        '''
-        20230730 --- bug here
-        '''
-
-
-
-
-
-
-
 
 
         # Associate remaining tracks together with unconfirmed tracks using IOU.
@@ -168,5 +156,5 @@ class Tracker:
 # 2023.7.28 更新 尝试就用xy来获得预测值
 if __name__ =="__main__":
     tracker = Tracker()
-    detections = [[(945, 363), 0.5414349], [(481, 428), 0.5572026], [(719, 264), 0.6236253], [(256, 508), 0.6116705], [(1098, 162), 0.5472754], [(939, 160), 0.71529096], [(637, 342), 0.51113856], [(691, 307), 0.56295353], [(1014, 159), 0.5815531], [(1212, 98), 0.632132], [(1095, 98), 0.45850858], [(1052, 119), 0.63280493]]
-    print(detections)
+    # detections = [[(945, 363), 0.5414349], [(481, 428), 0.5572026], [(719, 264), 0.6236253], [(256, 508), 0.6116705], [(1098, 162), 0.5472754], [(939, 160), 0.71529096], [(637, 342), 0.51113856], [(691, 307), 0.56295353], [(1014, 159), 0.5815531], [(1212, 98), 0.632132], [(1095, 98), 0.45850858], [(1052, 119), 0.63280493]]
+    # print(detections)

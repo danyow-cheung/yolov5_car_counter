@@ -152,7 +152,8 @@ class Yolo_detect():
 
             res_conf.append(confidences[i])
 
-        return res_box,res_conf,res_label,input_image
+        # return res_box,res_conf,res_label,input_image
+        return res_box,res_conf,res_label
 
 
     
