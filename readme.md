@@ -1,21 +1,26 @@
-# YOLO5 +  Counter
-> 先把yolov5s.pt 转换为 .onxx 格式
- 
+# yolov5 + deepsort = object tracking (object counting)
 
-~~https://www.youtube.com/watch?v=WgPbbWmnXJ8&t=5031s~~ 太多包，不可
+## basic:
+yolov5 for car detection
+deepsort for car tracking 
 
-使用像素值的差异进行计数，应该不难。
+## features:
+if the car `y` coordinate greater than the half of the frame height ,then we add 1 to the total count 
 
-错误解决：https://forum.opencv.org/t/error-when-reading-yolo5-as-onnx-using-cv2/11507/3
+## main code:
+- main_count.py:
+    yolo+deepsort+counting
+- main.py
+    yolo+deepsort
+- yolo_counter.py
+    > You can specify the required category to identify
+    yolo detection through opencv dnn module 
 
-**逐帧读入，但是在运动过程如何做到不重复计数？**
 
-还是要使用ID索引进行跟踪每辆车的轨迹，使用ID索引要确保每辆车的ID不会改变。
+## output demo:
+🚗output.mp4
 
-更新，根据iD的索引的话，随着视频帧的移动，ID出现改变
-
-## 2023.4.16 learning 
-> 1. https://github.com/charnkanit/Yolov5-Vehicle-Counting/blob/main/track.py
-> 2. https://techvidvan.com/tutorials/opencv-vehicle-detection-classification-counting/
-> 3. https://jorgestutorials.com/pycvtraffic.html
+## ref
+https://github.com/ultralytics/yolov5
+https://github.com/nwojke/deep_sort
 
