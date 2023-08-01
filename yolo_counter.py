@@ -113,6 +113,7 @@ class Yolo_detect():
             if confidence>self.CONFIDENCE_THRESHOLD:
                 classes_scores = row[5:]
                 class_id = np.argmax(classes_scores)
+                '''如果要特定車，卡車或人，可以在這裡添加類別判斷'''
                 if (classes_scores[class_id]>self.SCORE_THRESHOLD):
                     confidences.append(confidence)
                     class_ids.append(class_id)
