@@ -21,6 +21,7 @@ if the car `y` coordinate greater than the half of the frame height ,then we add
 🚗output.mp4
 
 ## ref
-https://github.com/ultralytics/yolov5
-https://github.com/nwojke/deep_sort
+1. https://github.com/ultralytics/yolov5
+
+2. https://github.com/nwojke/deep_sort
 
